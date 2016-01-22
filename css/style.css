@@ -14,3 +14,22 @@ html, body {
     top: 0;
     bottom: 0;
 }*/
+
+.input-group {
+    left: 50px;
+    bottom: 85%;
+    position: fixed;
+    width: 300px;
+}
+
+.list-group {
+    left: 50px;
+    bottom: 75%;
+    position: fixed;
+    width: 300px;
+}
+
+
+#list-form{
+    background-color: #1b6d85;
+}
