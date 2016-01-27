@@ -1,35 +1,41 @@
 html, body {
     height: 100%;
     margin: 0;
+    font-weight: bold;
+    color: #142cff!important;
 }
 #map{
-    height: 100%;
+
+    /*height: 100%;*/
     margin: 0;
+    height: 100vh; /*this works rather that %*/
 }
 
-/*
-#map {
-    width: 100%;
-    height: 50vh;
-    top: 0;
-    bottom: 0;
-}*/
 
 .input-group {
     left: 50px;
     bottom: 85%;
     position: fixed;
-    width: 300px;
+    width: 25%;
 }
 
 .list-group {
+    top: 20%;
     left: 50px;
-    bottom: 75%;
+    bottom: 53%;
     position: fixed;
-    width: 300px;
+    width: 25%;
 }
 
 
-#list-form{
+#list-form {
     background-color: #1b6d85;
+}
+
+.gmnoprint { /*removing map/satellite button*/
+    display: none;
+}
+
+.container-fluid{
+    padding: 0;
 }

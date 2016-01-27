@@ -7,23 +7,24 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Lato:100,300" rel="stylesheet" type="text/css">
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
     <script src="js/lib/knockout.js"></script>
     <script src="js/jQuery.js"></script>
-    <script src="js/app.js"></script>
 </head>
-<body>
+<body onload="init()">
 <div id="map"></div>
-<div class="input-group">
+    <div class="input-group">
       <span class="input-group-btn">
         <button class="btn btn-info" type="button">Go!</button>
       </span>
-    <input type="text" class="form-control" placeholder="Search for Garden">
-</div>
-<ul class="list-group" data-bind="foreach: visiblePlaces">
-    <li id="list" class="list-group-item" data-bind="text: name"></li>
-</ul>
+        <input type="search" class="form-control" placeholder="Search for Garden"
+               data-bind="textInput: userInput, event: {keyup: filterMarkers}">
+    </div>
+    <ul class="list-group" data-bind="foreach: visiblePlaces">
+        <li id="list" class="list-group-item" data-bind="text: name"></li>
+    </ul>
+
+
 </body>
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?callback=initMap">
-</script>
+<script src="js/app.js"></script>
 </html>

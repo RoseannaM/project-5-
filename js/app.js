@@ -1,3 +1,4 @@
+// hard coded locations data
 var locationData = [
     {
         name: 'Royal Botanic Gardens',
@@ -35,62 +36,85 @@ var locationData = [
     }
 ];
 
-var map;
+function init() {//need this for map to work
 
-    var place = function(locations) {
-        locations.forEach(function (location) {
-            var contentString = location.description;
+    var markers = []; //location marker array
 
-            var infowindow = new google.maps.InfoWindow({
-                content: contentString
-            });
-            var marker = new google.maps.Marker({
-                position: location.latLng,
-                map: map,
-                title: location.name
-            });
+    var map = new google.maps.Map(document.getElementById('map'), {
+        center: {lat: -33.873004, lng: 151.211405},
+        zoom: 13,
+        styles: //styles go in here
+            [
+                {
+                    "featureType": "road",
+                    "stylers": [
+                        {"hue": "#00AEEF"},
+                        {"saturation": 2},
+                        {"lightness": 34}
+                    ]
+                }
+            ]
+    });
 
-            marker.addListener('click', function () {
-                infowindow.open(map, marker);
-            });
-
-        })
-    };
-
-    function initMap() {
-
-        var myLatLng = {lat: -33.873004, lng: 151.211405};
-        map = new google.maps.Map(document.getElementById('map'), {
-            center: myLatLng,
-            zoom: 13,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            styles: //styles go in here
-                [
-                    {
-                        "featureType": "road",
-                        "stylers": [
-                            {"hue": "#f600ff"},
-                            {"saturation": 2},
-                            {"lightness": 34}
-                        ]
-                    }
-                ]
-        });
-        place(locationData);
-        /*var contentString = "This is a Marker";
+    // Location constructor
+    function addMarker(location) {
+        var contentString = location.description;
 
         var infowindow = new google.maps.InfoWindow({
             content: contentString
         });
-
         var marker = new google.maps.Marker({
-            position: myLatLng,
+            animation: google.maps.Animation.DROP,
+            position: location.latLng,
             map: map,
-            title: 'Uluru (Ayers Rock)'
+            icon: 'images/marker.png',
+            title: location.name
         });
+
         marker.addListener('click', function () {
             infowindow.open(map, marker);
-        });*/
+        });
 
+        marker.addListener('click', toggleBounce);
+
+        function toggleBounce() {
+            if (marker.getAnimation() !== null) {
+                marker.setAnimation(null);
+            } else {
+                marker.setAnimation(google.maps.Animation.BOUNCE);
+            }
+        }
+        markers.push(marker); //So we can delete them later.
     }
 
+    function deleteMarkers() {
+        markers.forEach(function (marker) {
+            marker.setMap(null);
+        });
+        markers = [];
+    }
+
+    function updateMarkers(locations) {
+        deleteMarkers();
+        locations.forEach(addMarker)
+    }
+
+    updateMarkers(locationData);
+
+// ViewModel
+    var myViewModel = {
+        visiblePlaces: locationData,
+        userInput: ko.observable(''),
+        filterMarkers: function () {
+            var locations = [];
+            locationData.forEach(function (location) {
+                if (location.name.toLowerCase().indexOf(myViewModel.userInput().toLowerCase()) > -1) { //Checking if userInput is in location.name
+                    locations.push(location);
+                }
+            });
+            updateMarkers(locations);
+        }
+    };
+
+    ko.applyBindings(myViewModel);
+}
