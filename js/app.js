@@ -1,7 +1,7 @@
 // hard coded locations data
 var locationData = [
     {
-        name: 'Royal Botanic Gardens, Sydney',
+        name: 'Royal Botanic Gardens, Sydney', //Name as shown in Wikipedia
         latLng: {lat: -33.868691, lng: 151.217736},
         description: ''
 
@@ -37,16 +37,12 @@ var locationData = [
     }
 ];
 
-/*
-var wikiDescriptionUrl = '//https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=Stack%20Overflow';
-var wikiImageUrl = '';
-*/
 
-function init() {//need this for map to work
+function init() {//Wrap map in a function. Need this for map to work
 
-    var markers = []; //location marker array
+    var markers = []; //location marker array so we can add and remove them from the map
 
-    var map = new google.maps.Map(document.getElementById('map'), {
+    var map = new google.maps.Map(document.getElementById('map'), { //map setup
         center: {lat: -33.873004, lng: 151.211405},
         zoom: 13,
         styles: //styles go in here
@@ -62,74 +58,77 @@ function init() {//need this for map to work
             ]
     });
 
-    // Location constructor
+    // Location constructor. All marker and info window events go here
     function addMarker(location) {
-        /*var contentString = location.description;*/
-        $.ajax({
-            url:'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=' + location.name + '&indexpageids=true&exsentences=1',
+        $.ajax({ //first call to request the first sentence of a wikipedia article description
+            url: 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=' +
+            '&titles=' + location.name + '&indexpageids=true&exsentences=1',
             dataType: "jsonp",
             success: function (descriptionResponse) {
                 var articleId = descriptionResponse.query.pageids[0]; //capture the id to use below
-                var descriptionArticleId = descriptionResponse.query.pages[articleId].extract;
-                console.log(descriptionArticleId);
-                $.ajax({
-                    url:'https://en.wikipedia.org/w/api.php?action=query&titles=' + location.name + '&prop=pageimages&format=json&pithumbsize=100',
+                var descriptionArticleId = descriptionResponse.query.pages[articleId].extract;//capture the text using the id
+                $.ajax({//second request to get the page image
+                    url: 'https://en.wikipedia.org/w/api.php?action=query&titles=' + location.name + '&prop=pageimages' +
+                    '&format=json&pithumbsize=300',
                     dataType: "jsonp",
                     success: function (imageResponse) {
                         var descriptionImage = imageResponse.query.pages[articleId].thumbnail.source;
-                        console.log(descriptionImage);
-                        var infowindow = new google.maps.InfoWindow({
-                            zIndex: 10,
-                            content: '<div id="markerDiv"><p>' + descriptionArticleId + '</p><img id="markerImage" src="' + descriptionImage + '"></div>'
+                        var infowindow = new google.maps.InfoWindow({//now add the description and image to the infobox
+                            content: '<div id="markerDiv"><p>' + descriptionArticleId + '</p><img id="markerImage" src="' +
+                            '' + descriptionImage + '"></div>'
                         });
 
-                        var marker = new google.maps.Marker({
+                        var marker = new google.maps.Marker({//add the markers to the map for each location
                             animation: google.maps.Animation.DROP,
                             position: location.latLng,
                             map: map,
                             icon: 'images/marker.png',
                             title: location.name
+
                         });
 
-                        marker.addListener('click', function () {
+                        marker.addListener('click', function () {//click event for info-window
                             infowindow.open(map, marker);
                         });
 
-                        marker.addListener('click', toggleBounce);
+                        /*marker.addListener('click', toggleBounce);
 
-                        function toggleBounce() {
-                            if (marker.getAnimation() !== null) {
-                                marker.setAnimation(null);
-                            } else {
-                                marker.setAnimation(google.maps.Animation.BOUNCE);
-                            }
-                        }
+                         function toggleBounce() {
+                         if (marker.getAnimation() !== null) {
+                         marker.setAnimation(null);
+                         } else {
+                         marker.setAnimation(google.maps.Animation.BOUNCE);
+                         }
+                         }*/
                         markers.push(marker); //So we can delete them later.
 
                     }
                 })
-            }
+            }/*,
+             error: function (error) {
+             alert("Request Timeout")
+             }*/
         });
     }
 
-    function deleteMarkers() {
+    function deleteMarkers() {//the method to delete filtered markers
         markers.forEach(function (marker) {
             marker.setMap(null);
         });
         markers = [];
     }
 
-    function updateMarkers(locations) {
+    function updateMarkers(locations) {//update filtered markers, delete the ones that were not searched for.
         deleteMarkers();
-        locations.forEach(addMarker)
+        locations.forEach(addMarker);//add the ones that are searched
     }
 
     updateMarkers(locationData);
 
 // ViewModel
     var myViewModel = {
-        visiblePlaces: locationData,
-        userInput: ko.observable(''),
+        visiblePlaces: locationData,//list of places shown in DOM
+        userInput: ko.observable(''),//Searched for text. This changes.
         filterMarkers: function () {
             var locations = [];
             locationData.forEach(function (location) {
@@ -144,41 +143,4 @@ function init() {//need this for map to work
     ko.applyBindings(myViewModel);
 }
 
-//Api calls
 
-/*var locationNames =[];
-locationData.forEach(function(location){
-    locationNames.push(location.name)
-});
-console.log(locationNames);
-
-var placeName = $ ('#searchName').textInput;
-console.log(placeName);
-var $wikiElem = $('#content');
-
-var wikiURL = 'https://en.wikipedia.org/w/api.php?action=opensearch&search=' + placeName + '&format=json&callback=wikiCallback'; //test url
-var wikiURL2 = 'https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles=' + locationData.name + '';
-console.log(wikiURL2);
-
-
-$.ajax({
-        url:wikiURL,
-        dataType: "jsonp",
-        success: function(response){
-            var articleList = response[1];
-
-            for (var i = 0; i < articleList.length; i++){
-                articleStr = articleList[i];
-                var url = 'https://en.wikipedia.org/wiki/'+ articleStr;
-                $wikiElem.append('<li><a href="' + url + '">'+
-                    articleStr + '</a></li>');
-            }
-            /!*articleList.forEach(function(articleStr){
-             var url = 'https://en.wikipedia.org/wiki/'+ articleStr;
-             $wikiElem.append('<li><a href="' + url + '">'+
-             articleStr + '</a></li>');
-             })*!/
-        }
-    }
-
-);*/

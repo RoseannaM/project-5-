@@ -16,7 +16,7 @@ html, body {
     left: 50px;
     bottom: 85%;
     position: fixed;
-    width: 25%;
+    width: 20%;
 }
 
 .list-group {
@@ -25,10 +25,22 @@ html, body {
     left: 50px;
     bottom: 53%;
     position: fixed;
-    width: 25%;
+    width: 20%;
 }
 
-
+.btn-group{
+    z-index: 0!important;
+    top: 20%;
+    left: 50px;
+    bottom: 53%;
+    position: fixed;
+    width: 20%;
+}
+#dropbutton{
+    left: 50px;
+    position: fixed;
+    width: 20%;
+}
 #list-form {
     z-index: 0!important;
     background-color: #1b6d85;
@@ -38,15 +50,39 @@ html, body {
     display: none;
 }
 
-.container-fluid{
+/*.container-fluid{
     padding: 0;
-}
+}*/
 
 #markerImage{
-    width: 80%;
+
 }
 
 #markerDiv{
     width: 300px;
     height: 300px;
+}
+
+.markerid{
+    width: 3000px;
+}
+
+@media only screen and (max-width: 700px) {
+    .list-group{
+        visibility: hidden;
+    }
+    .btn-group{
+        visibility: visible;
+    }
+    #dropbutton{
+        width: 100px;
+    }
+    .input-group{
+        width: 100px;
+    }
+}
+@media only screen and (min-width: 700px) {
+    .btn-group {
+        visibility: hidden;
+    }
 }
