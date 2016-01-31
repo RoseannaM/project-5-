@@ -5,7 +5,6 @@ html, body {
     color: #142cff!important;
 }
 #map{
-    /*height: 100%;*/
     margin: 0;
     height: 100vh; /*this works rather that %*/
 }
@@ -68,17 +67,31 @@ html, body {
 }
 
 @media only screen and (max-width: 700px) {
-    .list-group{
+    #bigList{
         visibility: hidden;
     }
     .btn-group{
+        left: 20px;
         visibility: visible;
     }
     #dropbutton{
+        bottom: 80%;
+        left: 20px;
         width: 100px;
     }
     .input-group{
+        bottom: 90%;
+        left: 20px;
         width: 100px;
+    }
+
+    .dropdown-menu{
+        z-index: 0!important;
+        top: 20%;
+        left: 20px;
+        bottom: 53%;
+        position: fixed;
+        width: 20%;
     }
 }
 @media only screen and (min-width: 700px) {

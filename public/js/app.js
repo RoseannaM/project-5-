@@ -91,23 +91,17 @@ function init() {//Wrap map in a function. Need this for map to work
                             infowindow.open(map, marker);
                         });
 
-                        /*marker.addListener('click', toggleBounce);
-
-                         function toggleBounce() {
-                         if (marker.getAnimation() !== null) {
-                         marker.setAnimation(null);
-                         } else {
-                         marker.setAnimation(google.maps.Animation.BOUNCE);
-                         }
-                         }*/
                         markers.push(marker); //So we can delete them later.
 
+                    },//error handling for Wikipedia description below
+                    error: function (error) {
+                        alert("Request failed for image of: " + location.name );
                     }
                 })
-            }/*,
+            },//error handling for Wikipedia images below
              error: function (error) {
-             alert("Request Timeout")
-             }*/
+              alert("Request failed for location: " + location.name);
+             }
         });
     }
 
@@ -129,14 +123,17 @@ function init() {//Wrap map in a function. Need this for map to work
     var myViewModel = {
         visiblePlaces: locationData,//list of places shown in DOM
         userInput: ko.observable(''),//Searched for text. This changes.
-        filterMarkers: function () {
-            var locations = [];
-            locationData.forEach(function (location) {
-                if (location.name.toLowerCase().indexOf(myViewModel.userInput().toLowerCase()) > -1) { //Checking if userInput is in location.name
-                    locations.push(location);
-                }
-            });
-            updateMarkers(locations);
+        filterMarkers: function (d, event) {
+            if (event.keyCode === 13){
+                var locations = [];
+                locationData.forEach(function (location) {
+                    if (location.name.toLowerCase().indexOf(myViewModel.userInput().toLowerCase()) > -1) { //Checking if userInput is in location.name
+                        locations.push(location);
+                    }
+                });
+                updateMarkers(locations);
+            }
+
         }
     };
 
