@@ -38,7 +38,7 @@ var locationData = [
 ];
 
 
-function init() {//Wrap map in a function. Need this for map to work
+function initMap() {//Wrap map in a function. Need this for map to work
 
     var markers = []; //location marker array so we can add and remove them from the map
 
@@ -87,7 +87,16 @@ function init() {//Wrap map in a function. Need this for map to work
 
                         });
 
-                        marker.addListener('click', function () {//click event for info-window
+                        //stop the marker animation from bouncing indefinitely
+                        function stopAnimation(marker) {
+                            setTimeout(function () {
+                                marker.setAnimation(null);
+                            }, 2000);
+                        }
+
+                        marker.addListener('click', function () {//click event for info-window and bounce animation
+                            marker.setAnimation(google.maps.Animation.BOUNCE);
+                            stopAnimation(marker);
                             infowindow.open(map, marker);
                         });
 
@@ -119,9 +128,11 @@ function init() {//Wrap map in a function. Need this for map to work
 
     updateMarkers(locationData);
 
+
+
 // ViewModel
     var myViewModel = {
-        visiblePlaces: locationData,//list of places shown in DOM
+        visiblePlaces: ko.observableArray(locationData),//list of places shown in DOM
         userInput: ko.observable(''),//Searched for text. This changes.
         filterMarkers: function (d, event) {
             if (event.keyCode === 13){
@@ -132,8 +143,8 @@ function init() {//Wrap map in a function. Need this for map to work
                     }
                 });
                 updateMarkers(locations);
+                myViewModel.visiblePlaces(locations);
             }
-
         }
     };
 
