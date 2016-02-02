@@ -19,7 +19,7 @@
         <input type="search" id="searchName" class="form-control" placeholder="Search for Garden"
                data-bind="textInput: userInput, event: {keyup: filterMarkers}">
     </div>
-    <ul class="list-group" data-bind="foreach: visiblePlaces">
+    <ul class="list-group" data-bind="foreach: visiblePlaces, click: display">
         <li id="bigList" class="list-group-item" data-bind="text: name"></li>
     </ul>
 <!-- Single button -->

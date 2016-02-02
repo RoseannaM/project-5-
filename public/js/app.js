@@ -37,10 +37,20 @@ var locationData = [
     }
 ];
 
+var markers = {
+
+}; //location marker object so we can add and remove them from the map
+
+//stop the marker animation from bouncing indefinitely
+function stopAnimation(marker) {
+    setTimeout(function () {
+        marker.setAnimation(null);
+    }, 2000);
+}
 
 function initMap() {//Wrap map in a function. Need this for map to work
 
-    var markers = []; //location marker array so we can add and remove them from the map
+
 
     var map = new google.maps.Map(document.getElementById('map'), { //map setup
         center: {lat: -33.873004, lng: 151.211405},
@@ -87,20 +97,15 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
                         });
 
-                        //stop the marker animation from bouncing indefinitely
-                        function stopAnimation(marker) {
-                            setTimeout(function () {
-                                marker.setAnimation(null);
-                            }, 2000);
-                        }
-
                         marker.addListener('click', function () {//click event for info-window and bounce animation
                             marker.setAnimation(google.maps.Animation.BOUNCE);
                             stopAnimation(marker);
                             infowindow.open(map, marker);
                         });
 
-                        markers.push(marker); //So we can delete them later.
+                        markers[location.name] = marker;//adding location name keys to the object
+
+                        /*markers.push(marker);*/ //So we can delete them later.
 
                     },//error handling for Wikipedia description below
                     error: function (error) {
@@ -115,10 +120,10 @@ function initMap() {//Wrap map in a function. Need this for map to work
     }
 
     function deleteMarkers() {//the method to delete filtered markers
-        markers.forEach(function (marker) {
-            marker.setMap(null);
-        });
-        markers = [];
+        for (var key in markers){
+            markers[key].setMap(null);
+        }
+        markers = {}; //clears the marker object
     }
 
     function updateMarkers(locations) {//update filtered markers, delete the ones that were not searched for.
@@ -128,12 +133,16 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
     updateMarkers(locationData);
 
-
-
 // ViewModel
     var myViewModel = {
         visiblePlaces: ko.observableArray(locationData),//list of places shown in DOM
         userInput: ko.observable(''),//Searched for text. This changes.
+        display: function (a, b)
+        {
+          markers[b.toElement.textContent].setAnimation(google.maps.Animation.BOUNCE);
+            stopAnimation(marker);
+        },
+
         filterMarkers: function (d, event) {
             if (event.keyCode === 13){
                 var locations = [];
@@ -147,8 +156,13 @@ function initMap() {//Wrap map in a function. Need this for map to work
             }
         }
     };
-
     ko.applyBindings(myViewModel);
 }
 
 
+/*
+location.addEventListener('click',function(){
+    console.log('click') ;
+})
+
+ */
