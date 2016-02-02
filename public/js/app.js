@@ -37,11 +37,10 @@ var locationData = [
     }
 ];
 
-var markers = {
+var markers = {}; //location marker object so we can add and remove them from the map
 
-}; //location marker object so we can add and remove them from the map
-//creating bounce function
-function bounce (marker) {//click event for info-window and bounce animation
+//creating bounce function to be used in view model and initMap functions
+function bounce(marker) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function () {
         marker.setAnimation(null);
@@ -49,8 +48,6 @@ function bounce (marker) {//click event for info-window and bounce animation
 
 }
 function initMap() {//Wrap map in a function. Need this for map to work
-
-
 
     var map = new google.maps.Map(document.getElementById('map'), { //map setup
         center: {lat: -33.873004, lng: 151.211405},
@@ -97,7 +94,7 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
                         });
 
-                        marker.addListener('click', function(){
+                        marker.addListener('click', function () {
                             bounce(marker);
                             infowindow.open(map, marker);
                         });
@@ -108,18 +105,18 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
                     },//error handling for Wikipedia description below
                     error: function (error) {
-                        alert("Request failed for image of: " + location.name );
+                        alert("Request failed for image of: " + location.name);
                     }
                 })
             },//error handling for Wikipedia images below
-             error: function (error) {
-              alert("Request failed for location: " + location.name);
-             }
+            error: function (error) {
+                alert("Request failed for location: " + location.name);
+            }
         });
     }
 
     function deleteMarkers() {//the method to delete filtered markers
-        for (var key in markers){
+        for (var key in markers) {
             markers[key].setMap(null);
         }
         markers = {}; //clears the marker object
@@ -136,13 +133,12 @@ function initMap() {//Wrap map in a function. Need this for map to work
     var myViewModel = {
         visiblePlaces: ko.observableArray(locationData),//list of places shown in DOM
         userInput: ko.observable(''),//Searched for text. This changes.
-        display: function (a, b)
-        {
+        display: function (a, b) {
             bounce(markers[b.toElement.textContent]);
         },
 
         filterMarkers: function (d, event) {
-            if (event.keyCode === 13){
+            if (event.keyCode === 13) {
                 var locations = [];
                 locationData.forEach(function (location) {
                     if (location.name.toLowerCase().indexOf(myViewModel.userInput().toLowerCase()) > -1) { //Checking if userInput is in location.name
@@ -156,11 +152,3 @@ function initMap() {//Wrap map in a function. Need this for map to work
     };
     ko.applyBindings(myViewModel);
 }
-
-
-/*
-location.addEventListener('click',function(){
-    console.log('click') ;
-})
-
- */
