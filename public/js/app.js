@@ -40,14 +40,14 @@ var locationData = [
 var markers = {
 
 }; //location marker object so we can add and remove them from the map
-
-//stop the marker animation from bouncing indefinitely
-function stopAnimation(marker) {
+//creating bounce function
+function bounce (marker) {//click event for info-window and bounce animation
+    marker.setAnimation(google.maps.Animation.BOUNCE);
     setTimeout(function () {
         marker.setAnimation(null);
     }, 2000);
-}
 
+}
 function initMap() {//Wrap map in a function. Need this for map to work
 
 
@@ -97,9 +97,8 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
                         });
 
-                        marker.addListener('click', function () {//click event for info-window and bounce animation
-                            marker.setAnimation(google.maps.Animation.BOUNCE);
-                            stopAnimation(marker);
+                        marker.addListener('click', function(){
+                            bounce(marker);
                             infowindow.open(map, marker);
                         });
 
@@ -139,8 +138,7 @@ function initMap() {//Wrap map in a function. Need this for map to work
         userInput: ko.observable(''),//Searched for text. This changes.
         display: function (a, b)
         {
-          markers[b.toElement.textContent].setAnimation(google.maps.Animation.BOUNCE);
-            stopAnimation(marker);
+            bounce(markers[b.toElement.textContent]);
         },
 
         filterMarkers: function (d, event) {
