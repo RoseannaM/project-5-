@@ -19,20 +19,20 @@
         <input type="search" id="searchName" class="form-control" placeholder="Search for Garden"
                data-bind="textInput: userInput, event: {keyup: filterMarkers}">
     </div>
-    <ul class="list-group" data-bind="foreach: visiblePlaces, click: display">
+    <ul class="list-group" id="big-list-group" data-bind="foreach: visiblePlaces, click: display">
         <li id="bigList" class="list-group-item" data-bind="text: name"></li>
     </ul>
 <!-- Single button -->
 <div class="btn-group">
-    <button type="button" id="dropbutton" class="btn btn-info dropdown-toggle"  data-toggle="dropdown" >
+    <button type="button" id="dropbutton" class="btn btn-info dropdown-toggle" data-toggle="dropdown" >
         Gardens <span class="caret"></span>
     </button>
-    <ul class="dropdown-menu" data-bind="foreach: visiblePlaces">
+    <ul class="dropdown-menu" data-bind="foreach: visiblePlaces, click: display">
         <li id="smallList" class="list-group-item" data-bind="text: name"></li>
     </ul>
 </div>
 </body>
 <script src="js/app.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+<script src="https://maps.googleapis.com/maps/api/js?callback=initMap" onerror="googleError()"
         async defer></script>
 </html>

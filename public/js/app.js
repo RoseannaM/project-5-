@@ -39,6 +39,12 @@ var locationData = [
 
 var markers = {}; //location marker object so we can add and remove them from the map
 
+var openWindow = null;
+
+function googleError(){
+    alert("Google Map failed to load" );
+}
+
 //creating bounce function to be used in view model and initMap functions
 function bounce(marker) {
     marker.setAnimation(google.maps.Animation.BOUNCE);
@@ -46,10 +52,17 @@ function bounce(marker) {
         marker.setAnimation(null);
     }, 2000);
 
+    if(openWindow){
+        openWindow.close(map, marker);
+    }
+    openWindow = marker.infoWindow;
+    openWindow.open(map, marker);
 }
+var map;
+
 function initMap() {//Wrap map in a function. Need this for map to work
 
-    var map = new google.maps.Map(document.getElementById('map'), { //map setup
+      map = new google.maps.Map(document.getElementById('map'), { //map setup
         center: {lat: -33.873004, lng: 151.211405},
         zoom: 13,
         styles: //styles go in here
@@ -94,9 +107,10 @@ function initMap() {//Wrap map in a function. Need this for map to work
 
                         });
 
+                        marker.infoWindow = infowindow;
+
                         marker.addListener('click', function () {
                             bounce(marker);
-                            infowindow.open(map, marker);
                         });
 
                         markers[location.name] = marker;//adding location name keys to the object
@@ -136,7 +150,6 @@ function initMap() {//Wrap map in a function. Need this for map to work
         display: function (a, b) {
             bounce(markers[b.toElement.textContent]);
         },
-
         filterMarkers: function (d, event) {
             if (event.keyCode === 13) {
                 var locations = [];

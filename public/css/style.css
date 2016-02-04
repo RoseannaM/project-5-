@@ -1,17 +1,30 @@
-html, body {
+body {
     height: 100%;
     margin: 0;
     font-weight: bold;
-    color: #142cff!important;
+    color: #000000 !important;
 }
-#map{
+
+/* html{
+     height: 100%;
+     margin: 0;
+     font-weight: bold;
+     color: #000000!important;
+ }*/
+
+p {
+    color: black;
+    margin: 0 0 10px;
+    font-weight: bold;
+}
+
+#map {
     margin: 0;
     height: 100vh; /*this works rather that %*/
 }
 
-
 .input-group {
-    z-index: 0!important;
+    z-index: 0 !important;
     left: 50px;
     bottom: 85%;
     position: fixed;
@@ -19,7 +32,7 @@ html, body {
 }
 
 .list-group {
-    z-index: 0!important;
+    z-index: 0 !important;
     top: 20%;
     left: 50px;
     bottom: 53%;
@@ -27,25 +40,28 @@ html, body {
     width: 20%;
 }
 
-.btn-group{
-    z-index: 0!important;
+.btn-group {
+    z-index: 0 !important;
     top: 20%;
     left: 50px;
     bottom: 53%;
     position: fixed;
     width: 20%;
 }
-#dropbutton{
+
+#dropbutton {
     left: 50px;
     position: fixed;
     width: 20%;
 }
+
 #list-form {
-    z-index: 0!important;
+    z-index: 0 !important;
     background-color: #1b6d85;
 }
 
-.gmnoprint { /*removing map/satellite button*/
+.gmnoprint {
+    /*removing map/satellite button*/
     display: none;
 }
 
@@ -53,40 +69,43 @@ html, body {
     padding: 0;
 }*/
 
-#markerImage{
+#markerImage {
 
 }
 
-#markerDiv{
+#markerDiv {
     width: 300px;
-    height: 300px;
+
 }
 
-.markerid{
+.markerid {
     width: 3000px;
 }
 
 @media only screen and (max-width: 700px) {
-    #bigList{
+    #bigList {
         visibility: hidden;
     }
-    .btn-group{
+
+    .btn-group {
         left: 20px;
         visibility: visible;
     }
-    #dropbutton{
+
+    #dropbutton {
         bottom: 80%;
         left: 20px;
         width: 100px;
     }
-    .input-group{
+
+    .input-group {
         bottom: 90%;
         left: 20px;
         width: 100px;
     }
 
-    .dropdown-menu{
-        z-index: 0!important;
+    .dropdown-menu {
+        z-index: 0 !important;
         top: 20%;
         left: 20px;
         bottom: 53%;
@@ -94,6 +113,7 @@ html, body {
         width: 20%;
     }
 }
+
 @media only screen and (min-width: 700px) {
     .btn-group {
         visibility: hidden;
